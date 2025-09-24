@@ -91,7 +91,7 @@ func TestRegisterInputValidation(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			err := tc.input.validate()
+			err := tc.input.Validate()
 
 			if err != nil {
 				// we want error

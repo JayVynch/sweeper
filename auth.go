@@ -37,7 +37,7 @@ func (in *RegisterInput) Sanitize() {
 	in.Username = strings.TrimSpace(in.Username)
 }
 
-func (in RegisterInput) validate() error {
+func (in RegisterInput) Validate() error {
 	if len(in.Username) < UsernameMinLen {
 		return fmt.Errorf("%w: username not long enough, (%d) characters at least", ErrValidation, UsernameMinLen)
 	}
