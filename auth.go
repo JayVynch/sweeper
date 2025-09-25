@@ -15,6 +15,7 @@ var (
 
 type AuthService interface {
 	Register(ctx context.Context, input RegisterInput) (AuthResponse, error)
+	Login(ctx context.Context, input LoginInput) (AuthResponse, error)
 }
 
 type AuthResponse struct {
@@ -52,6 +53,28 @@ func (in RegisterInput) Validate() error {
 
 	if in.Password != in.ConfirmPassword {
 		return fmt.Errorf("%w: password does not match", ErrValidation)
+	}
+	return nil
+}
+
+type LoginInput struct {
+	Email    string
+	Password string
+}
+
+func (in *LoginInput) Sanitize() {
+	in.Email = strings.TrimSpace(in.Email)
+	in.Email = strings.ToLower(in.Email)
+}
+
+func (in LoginInput) Validate() error {
+
+	if !emailRegexp.MatchString(in.Email) {
+		return fmt.Errorf("%w:  not a valid email structure", ErrValidation)
+	}
+
+	if len(in.Password) < 1 {
+		return fmt.Errorf("%w: password required", ErrValidation)
 	}
 	return nil
 }

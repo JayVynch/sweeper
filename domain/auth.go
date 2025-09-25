@@ -61,3 +61,34 @@ func (as *AuthService) Register(ctx context.Context, input sweeper.RegisterInput
 		User:        newUser,
 	}, nil
 }
+
+func (as *AuthService) Login(ctx context.Context, input sweeper.LoginInput) (sweeper.AuthResponse, error) {
+	input.Sanitize()
+
+	if err := input.Validate(); err != nil {
+		return sweeper.AuthResponse{}, err
+	}
+
+	user, err := as.UserRepo.GetByEmail(ctx, input.Email)
+	if err != nil {
+		switch {
+		case errors.Is(err, sweeper.ErrorNotFound):
+			return sweeper.AuthResponse{}, sweeper.ErrBadCredentials
+		default:
+			return sweeper.AuthResponse{}, err
+		}
+
+	}
+
+	// check password hash
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password))
+	if err != nil {
+		return sweeper.AuthResponse{}, sweeper.ErrBadCredentials
+	}
+
+	// return AccessToken and user
+	return sweeper.AuthResponse{
+		AccessToken: "SweeperToken",
+		User:        user,
+	}, nil
+}
