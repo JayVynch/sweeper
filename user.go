@@ -13,8 +13,8 @@ var (
 
 type UserRepo interface {
 	Create(cxt context.Context, user User) (User, error)
-	GetByUsername(cxt context.Context, username string)
-	GetByEmail(cxt context.Context, email string)
+	GetByUsername(cxt context.Context, username string) (User, error)
+	GetByEmail(cxt context.Context, email string) (User, error)
 }
 
 type User struct {

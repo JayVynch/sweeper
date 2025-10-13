@@ -45,7 +45,7 @@ func (as *AuthService) Register(ctx context.Context, input sweeper.RegisterInput
 	// hash password
 	hashedPwd, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return sweeper.AuthResponse{}, fmt.Errorf("Error during hashing password: %w", err)
+		return sweeper.AuthResponse{}, fmt.Errorf("error during hashing password: %w", err)
 	}
 
 	newUser.Password = string(hashedPwd)
@@ -53,7 +53,7 @@ func (as *AuthService) Register(ctx context.Context, input sweeper.RegisterInput
 	// create user
 	newUser, err = as.UserRepo.Create(ctx, newUser)
 	if err != nil {
-		return sweeper.AuthResponse{}, fmt.Errorf("Error creating user: %w", err)
+		return sweeper.AuthResponse{}, fmt.Errorf("error creating user: %w", err)
 	}
 	// return AccessToken and user
 	return sweeper.AuthResponse{
